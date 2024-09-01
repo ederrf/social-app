@@ -11,6 +11,7 @@ import Animated, {
   interpolate,
   SharedValue,
   useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
@@ -458,6 +459,7 @@ function AnimatedLikeIcon({
 }) {
   const t = useTheme()
   const {i18n} = useLingui()
+  const reduceMotion = useReducedMotion()
   const likeStyle = useAnimatedStyle(() => ({
     transform: [
       {
@@ -510,25 +512,15 @@ function AnimatedLikeIcon({
   const countStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        translateY: withTiming(likeTextAnimValue.value, {
-          duration: 400,
-          easing: Easing.out(Easing.cubic),
-        }),
+        translateY: reduceMotion
+          ? likeTextAnimValue.value
+          : withTiming(likeTextAnimValue.value, {
+              duration: 400,
+              easing: Easing.out(Easing.cubic),
+            }),
       },
     ],
   }))
-  // const countStyle = useAnimatedStyle(() => ({
-  //   transform: [
-  //     {
-  //       translateY: interpolate(
-  //         likeTextAnimValue.value,
-  //         [0, 1],
-  //         [0, big ? -22 : -18],
-  //         'clamp',
-  //       ),
-  //     },
-  //   ],
-  // }))
 
   const prevFormattedCount = formatCount(
     i18n,
