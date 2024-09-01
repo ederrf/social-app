@@ -122,7 +122,7 @@ let PostCtrls = ({
 
   const likeValue = post.viewer?.like ? 1 : 0
   const likeIconAnimValue = useSharedValue(likeValue)
-  const likeTextAnimValue = useSharedValue(likeValue ? (big ? -22 : -18) : 0)
+  const likeTextAnimValue = useSharedValue(likeValue)
   const nextExpectedLikeValue = React.useRef(likeValue)
   React.useEffect(() => {
     // Catch nonlocal changes (e.g. shadow update) and always reflect them.
