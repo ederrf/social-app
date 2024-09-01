@@ -144,19 +144,11 @@ let PostCtrls = ({
     try {
       if (!post.viewer?.like) {
         nextExpectedLikeValue.current = 1
-        if (PlatformInfo.getIsReducedMotionEnabled()) {
-          likeIconAnimValue.value = 1
-          likeTextAnimValue.value = 1
-        } else {
-          likeIconAnimValue.value = withTiming(1, {
-            duration: 400,
-            easing: Easing.out(Easing.cubic),
-          })
-          likeTextAnimValue.value = withTiming(1, {
-            duration: 400,
-            easing: Easing.out(Easing.cubic),
-          })
-        }
+        likeIconAnimValue.value = withTiming(1, {
+          duration: 400,
+          easing: Easing.out(Easing.cubic),
+        })
+        likeTextAnimValue.value = big ? -22 : -18
         playHaptic()
         sendInteraction({
           item: post.uri,
@@ -171,10 +163,7 @@ let PostCtrls = ({
         if (PlatformInfo.getIsReducedMotionEnabled()) {
           likeTextAnimValue.value = 0
         } else {
-          likeTextAnimValue.value = withTiming(0, {
-            duration: 400,
-            easing: Easing.out(Easing.cubic),
-          })
+          likeTextAnimValue.value = 0
         }
         await queueUnlike()
       }
@@ -184,18 +173,19 @@ let PostCtrls = ({
       }
     }
   }, [
+    isBlocked,
     _,
+    post.viewer?.like,
+    post.uri,
     likeIconAnimValue,
     likeTextAnimValue,
+    big,
     playHaptic,
-    post.uri,
-    post.viewer?.like,
+    sendInteraction,
+    feedContext,
+    captureAction,
     queueLike,
     queueUnlike,
-    sendInteraction,
-    captureAction,
-    feedContext,
-    isBlocked,
   ])
 
   const onRepost = useCallback(async () => {
@@ -516,18 +506,29 @@ function AnimatedLikeIcon({
       },
     ],
   }))
+
   const countStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        translateY: interpolate(
-          likeTextAnimValue.value,
-          [0, 1],
-          [0, big ? -22 : -18],
-          'clamp',
-        ),
+        translateY: withTiming(likeTextAnimValue.value, {
+          duration: 400,
+          easing: Easing.out(Easing.cubic),
+        }),
       },
     ],
   }))
+  // const countStyle = useAnimatedStyle(() => ({
+  //   transform: [
+  //     {
+  //       translateY: interpolate(
+  //         likeTextAnimValue.value,
+  //         [0, 1],
+  //         [0, big ? -22 : -18],
+  //         'clamp',
+  //       ),
+  //     },
+  //   ],
+  // }))
 
   const prevFormattedCount = formatCount(
     i18n,
