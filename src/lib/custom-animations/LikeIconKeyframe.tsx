@@ -1,5 +1,8 @@
 import React from 'react'
-import Animated, {Keyframe} from 'react-native-reanimated'
+import Animated, {
+  Keyframe,
+  LayoutAnimationConfig,
+} from 'react-native-reanimated'
 
 import {s} from 'lib/styles'
 import {useTheme} from '#/alf'
@@ -32,18 +35,18 @@ export function AnimatedLikeIcon({
 }) {
   const t = useTheme()
 
-  if (isLiked) {
-    return (
-      <Animated.View entering={keyframe}>
-        <HeartIconFilled style={s.likeColor} width={big ? 22 : 18} />
-      </Animated.View>
-    )
-  }
-
   return (
-    <HeartIconOutline
-      style={[{color: t.palette.contrast_500}, {pointerEvents: 'none'}]}
-      width={big ? 22 : 18}
-    />
+    <LayoutAnimationConfig skipEntering>
+      {isLiked ? (
+        <Animated.View entering={keyframe}>
+          <HeartIconFilled style={s.likeColor} width={big ? 22 : 18} />
+        </Animated.View>
+      ) : (
+        <HeartIconOutline
+          style={[{color: t.palette.contrast_500}, {pointerEvents: 'none'}]}
+          width={big ? 22 : 18}
+        />
+      )}
+    </LayoutAnimationConfig>
   )
 }
