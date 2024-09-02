@@ -29,7 +29,6 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
 import {useGate} from '#/lib/statsig/statsig'
 import {toShareUrl} from '#/lib/strings/url-helpers'
-import {s} from '#/lib/styles'
 import {Shadow} from '#/state/cache/types'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {
@@ -42,6 +41,7 @@ import {
   ProgressGuideAction,
   useProgressGuideControls,
 } from '#/state/shell/progress-guide'
+import {CountWheel} from 'lib/custom-animations/LikeCountWheel'
 import {AnimatedLikeIcon} from 'lib/custom-animations/LikeIconKeyframe'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
@@ -447,7 +447,6 @@ export {PostCtrls}
 
 function LikeIcon({
   big,
-  defaultCtrlColor,
   isLiked,
   likeCount,
 }: {
@@ -458,7 +457,6 @@ function LikeIcon({
   isLiked: boolean
   likeCount: number
 }) {
-  const {i18n} = useLingui()
   // const circle1Style = useAnimatedStyle(() => ({
   //   opacity: interpolate(
   //     likeIconAnimValue.value,
@@ -508,8 +506,6 @@ function LikeIcon({
   //   ],
   // }))
 
-  const formattedCount = formatCount(i18n, likeCount)
-
   return (
     <>
       {/*<Animated.View*/}
@@ -547,17 +543,7 @@ function LikeIcon({
       {/*  ]}*/}
       {/*/>*/}
       <AnimatedLikeIcon isLiked={isLiked} big={big} />
-      <Text
-        testID="likeCount"
-        style={[
-          [
-            big ? a.text_md : {fontSize: 15},
-            a.user_select_none,
-            isLiked ? [a.font_bold, s.likeColor] : defaultCtrlColor,
-          ],
-        ]}>
-        {formattedCount}
-      </Text>
+      <CountWheel likeCount={likeCount} big={big} isLiked={isLiked} />
     </>
   )
 }
